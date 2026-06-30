@@ -95,8 +95,8 @@
 
 [Текст ссылки](https://example.com)  
 [Относительная ссылка](../README.md)  
-[Ссылка с тайтлом](https://example.com "Подсказка при наведении")
-![Альтернативный текст](images/photo.png)  
+[Ссылка с тайтлом](https://example.com "Подсказка при наведении")  
+![Альтернативный текст](images/photo.png)   
 ![Картинка с тайтлом](images/photo.png "Подпись")  
 [![Alt](images/icon.png)](https://example.com)
 
