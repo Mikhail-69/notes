@@ -58,7 +58,7 @@
 Подстрочник: H~2~O       → H~2~O
 Надстрочник: X^2^        → X^2^
 
-![Описание картинки](../images/screenshots/markdown.png)
+![Описание картинки](../../images/screenshots/markdown.png)
 
 ## Скрытый текст (спойлер!)
 
@@ -204,7 +204,7 @@ ___
 
 ### sequenceDiagram
 
-![Описание картинки](../images/diagrams/sequenceDiagram.png)
+![Описание картинки](../../images/diagrams/sequenceDiagram.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 sequenceDiagram
@@ -228,7 +228,7 @@ sequenceDiagram
 
 ### flowchart
 
-![Описание картинки](../images/diagrams/flowchart.png)
+![Описание картинки](../../images/diagrams/flowchart.png)
 
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
@@ -242,7 +242,7 @@ flowchart TD
 
 ### gitGraph
 
-![Описание картинки](../images/diagrams/gitGraph.png)
+![Описание картинки](../../images/diagrams/gitGraph.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 gitGraph
@@ -257,7 +257,7 @@ gitGraph
 
 ### pie
 
-![Описание картинки](../images/diagrams/pie.png)
+![Описание картинки](../../images/diagrams/pie.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 pie
