@@ -57,3 +57,12 @@
  Проект | Описание |
 | -------- | ---------- |
 | **[Podman Desktop](https://github.com/podman-desktop/podman-desktop)** | Графический инструмент для работы с контейнерами и Kubernetes на рабочем столе. Поддерживает Podman, Docker, CRC, Lima. |
+
+## 📚 Обучение и справочники
+
+| Проект | Описание |
+|--------|----------|
+| **[90 Days of DevOps](https://github.com/MichaelCade/90DaysOfDevOps)** | Структурированная учебная программа по DevOps на 90 дней. |
+| **[The Book of Secret Knowledge](https://github.com/trimstray/the-book-of-secret-knowledge)** | Коллекция материалов для системных администраторов, DevOps и пентестеров. |
+| **[Mongoose](https://github.com/cesanta/mongoose)** | Встраиваемый веб-сервер и сетевая библиотека для C/C++ проектов. Поддерживает HTTP, WebSocket, MQTT, TLS 1.3. |
+| **[Logseq](https://github.com/logseq/logseq)** | Инструмент для управления знаниями с акцентом на приватность. Работает с Markdown и Org mode. |

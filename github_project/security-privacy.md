@@ -61,4 +61,17 @@
 
 | Проект | Описание |
 |--------|----------|
-| **[Iroh](https://github.com/n0-computer/iroh)** | Библиотека на Rust для установки соединений между устройствами по публичному ключу вместо IP-адреса. Использует hole punching и relay-серверы. |
+| **[Iroh](https://github.com/n0-computer/iroh)** | Библиотека на Rust для установки соединений между устройствами по публичному ключу вместо IP-адреса. Использует hole punching и relay-серверы. |   
+
+## 🛡️ Security Tools
+
+| Проект | Описание |
+|--------|----------|
+| **[Kubernetes Goat](https://github.com/madhuakula/kubernetes-goat)** | Интерактивная песочница для обучения безопасности Kubernetes. |
+| **[Trivy](https://github.com/aquasecurity/trivy)** | Сканер безопасности для контейнеров, Git-репозиториев и Kubernetes. |
+| **[afrog](https://github.com/zan8in/afrog)** | Сканер уязвимостей для bug bounty и пентестов. |
+| **[exploitarium](https://github.com/bikini/exploitarium)** | Коллекция публичных PoC-эксплойтов. |
+| **[Flowsint](https://github.com/reconurge/flowsint)** | OSINT-инструмент для визуализации связей в граф. |
+| **[Proxmox Mail Gateway](https://github.com/proxmox-mail-gateway/pmg)** | Фильтрация спама и вирусов в почтовом трафике. |
+
+
