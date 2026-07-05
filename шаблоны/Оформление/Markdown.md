@@ -86,7 +86,6 @@
 3. Третий пункт
 
 ### Альтернативные маркеры
-
 - Звёздочка
 - Плюс
 
@@ -203,7 +202,6 @@ ___
 Работает на GitHub, GitLab, в Obsidian и некоторых других платформах.
 
 ### sequenceDiagram
-
 ![Описание картинки](../../images/diagrams/sequenceDiagram.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
@@ -226,8 +224,7 @@ sequenceDiagram
     K8s->>K8s: ✅ Pod запущен!
 </details>
 
-### flowchart
-
+### flowchar
 ![Описание картинки](../../images/diagrams/flowchart.png)
 
 <details>
@@ -256,7 +253,6 @@ gitGraph
 </details>
 
 ### pie
-
 ![Описание картинки](../../images/diagrams/pie.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>

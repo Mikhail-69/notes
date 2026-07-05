@@ -59,6 +59,7 @@
 
 ## 🌐 Сеть и соединения
 
+
 | Проект | Описание |
 |--------|----------|
 | **[Iroh](https://github.com/n0-computer/iroh)** | Библиотека на Rust для установки соединений между устройствами по публичному ключу вместо IP-адреса. Использует hole punching и relay-серверы. |   
@@ -77,3 +78,8 @@
 | **[OSINT Arsenal](https://github.com/rawfilejson/awesome-osint-arsenal)** | Подборка из 751 инструмента для OSINT по 50 категориям. |
 | **[Simplex Chat](https://github.com/simplex-chat/simplex-chat)** | Мессенджер с полным отсутствием идентификаторов пользователей (без номеров телефонов и имён). |
 | **[Notesnook](https://github.com/streetwriters/notesnook)** | Приложение для заметок с полным сквозным шифрованием. Zero knowledge. |
+=======
+| Проект | Описание |
+|--------|----------|
+| **[Iroh](https://github.com/n0-computer/iroh)** | Библиотека на Rust для установки соединений между устройствами по публичному ключу вместо IP-адреса. Использует hole punching и relay-серверы. |
+

@@ -70,6 +70,7 @@
 | **[Plausible](https://github.com/plausible/analytics)** | Замена Google Analytics без слежки за пользователями. Лёгкий и приватный. |
 | **[PostHog](https://github.com/PostHog/posthog)** | Аналитика пользователей, запись сессий, A/B-тесты. Альтернатива Mixpanel на своём сервере. |
 
+
 ## 🔧 Self-hosted утилиты
 
 | Проект | Описание |
