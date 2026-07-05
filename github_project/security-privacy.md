@@ -73,5 +73,7 @@
 | **[exploitarium](https://github.com/bikini/exploitarium)** | Коллекция публичных PoC-эксплойтов. |
 | **[Flowsint](https://github.com/reconurge/flowsint)** | OSINT-инструмент для визуализации связей в граф. |
 | **[Proxmox Mail Gateway](https://github.com/proxmox-mail-gateway/pmg)** | Фильтрация спама и вирусов в почтовом трафике. |
-
-
+| **[OWASP CheatSheetSeries](https://github.com/OWASP/CheatSheetSeries)** | Коллекция практических руководств по безопасности веб-приложений от OWASP. |
+| **[OSINT Arsenal](https://github.com/rawfilejson/awesome-osint-arsenal)** | Подборка из 751 инструмента для OSINT по 50 категориям. |
+| **[Simplex Chat](https://github.com/simplex-chat/simplex-chat)** | Мессенджер с полным отсутствием идентификаторов пользователей (без номеров телефонов и имён). |
+| **[Notesnook](https://github.com/streetwriters/notesnook)** | Приложение для заметок с полным сквозным шифрованием. Zero knowledge. |
