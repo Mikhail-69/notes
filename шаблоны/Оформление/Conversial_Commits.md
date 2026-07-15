@@ -91,3 +91,5 @@ BREAKING CHANGE: API no longer supports XML.
 fix → PATCH-релиз  
 feat → MINOR-релиз  
 BREAKING CHANGE → MAJOR-релиз
+
+Ссылка на полную статью [тут](https://www.conventionalcommits.org/en/v1.0.0/)
