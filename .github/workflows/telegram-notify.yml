@@ -3,35 +3,51 @@ name: 📨 Telegram Notify
 on:
   push:
     branches: [ dev, main ]
-  pull_request:
-    types: [ closed ]
-    branches: [ main ]
 
 jobs:
   notify:
     runs-on: ubuntu-latest
-    # Отправляем только если есть маркер #notify в коммите или PR слит
     if: |
-      (github.event_name == 'push' && contains(github.event.head_commit.message, '#notify')) ||
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+      contains(github.event.head_commit.message, '#notify') &&
+      github.actor == 'Mikhail-69'
 
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
+
+      - name: 📝 Prepare message
+        id: prepare
+        run: |
+          CLEAN_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | sed 's/ * #notify *$//')
+          # Получаем списки файлов, исключая images/
+          ADDED=$(echo '${{ toJSON(github.event.head_commit.added) }}' | jq -r '.[] | select(contains("images/") | not)')
+          MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r '.[] | select(contains("images/") | not)')
+          REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r '.[] | select(contains("images/") | not)')
+
+          # Начинаем формировать сообщение
+          MSG="Привет! Новый коммит был отправлен в репу."
+          MSG="$MSG\n\n📝 **Коммит:**\n$CLEAN_MESSAGE"
+
+          if [ -n "$ADDED" ]; then
+            MSG="$MSG\n\n📂 **Добавлено:**\n$(echo "$ADDED" | sed 's/^/• /')"
+          fi
+
+          if [ -n "$MODIFIED" ]; then
+            MSG="$MSG\n\n📂 **Изменено:**\n$(echo "$MODIFIED" | sed 's/^/• /')"
+          fi
+
+          if [ -n "$REMOVED" ]; then
+            MSG="$MSG\n\n📂 **Удалено:**\n$(echo "$REMOVED" | sed 's/^/• /')"
+          fi
+
+          MSG="$MSG\n\n🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+
+          # Сохраняем результат в переменную
+          echo "message=$MSG" >> $GITHUB_OUTPUT
 
       - name: 📤 Send Telegram Notification
         uses: cbrgm/telegram-github-action@v1
         with:
           token: ${{ secrets.TELEGRAM_TOKEN }}
           to: ${{ secrets.TELEGRAM_CHAT_ID }}
-          message: |
-            📢 **Новое событие в репозитории!**
-
-            👤 **Автор:** ${{ github.actor }}
-            📁 **Репозиторий:** [${{ github.repository }}](https://github.com/${{ github.repository }})
-            🔗 **Ссылка:** ${{ github.event.head_commit.url || github.event.pull_request.html_url }}
-
-            📝 **Сообщение:**
-            ${{ github.event.head_commit.message || github.event.pull_request.title }}
-
-            ${{ github.event_name == 'push' && '📌 Ветка: ' || '🔀 Pull Request #' }}${{ github.ref_name || github.event.number }}
+          message: ${{ steps.prepare.outputs.message }}
