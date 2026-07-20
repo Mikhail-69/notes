@@ -1,0 +1,37 @@
+name: 📨 Telegram Notify
+
+on:
+  push:
+    branches: [ dev, main ]
+  pull_request:
+    types: [ closed ]
+    branches: [ main ]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    # Отправляем только если есть маркер #notify в коммите или PR слит
+    if: |
+      (github.event_name == 'push' && contains(github.event.head_commit.message, '#notify')) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true)
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📤 Send Telegram Notification
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: |
+            📢 **Новое событие в репозитории!**
+
+            👤 **Автор:** ${{ github.actor }}
+            📁 **Репозиторий:** [${{ github.repository }}](https://github.com/${{ github.repository }})
+            🔗 **Ссылка:** ${{ github.event.head_commit.url || github.event.pull_request.html_url }}
+
+            📝 **Сообщение:**
+            ${{ github.event.head_commit.message || github.event.pull_request.title }}
+
+            ${{ github.event_name == 'push' && '📌 Ветка: ' || '🔀 Pull Request #' }}${{ github.ref_name || github.event.number }}
