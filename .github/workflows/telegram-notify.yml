@@ -18,13 +18,15 @@ jobs:
       - name: 📝 Prepare message
         id: prepare
         run: |
+          # Убираем #notify из сообщения
           CLEAN_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | sed 's/ * #notify *$//')
-          # Получаем списки файлов, исключая images/
-          ADDED=$(echo '${{ toJSON(github.event.head_commit.added) }}' | jq -r '.[] | select(contains("images/") | not)')
-          MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r '.[] | select(contains("images/") | not)')
-          REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r '.[] | select(contains("images/") | not)')
 
-          # Начинаем формировать сообщение
+          # Получаем списки файлов с обработкой null
+          ADDED=$(echo '${{ toJSON(github.event.head_commit.added) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+          MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+          REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+
+          # Формируем сообщение
           MSG="Привет! Новый коммит был отправлен в репу."
           MSG="$MSG\n\n📝 **Коммит:**\n$CLEAN_MESSAGE"
 
@@ -42,7 +44,6 @@ jobs:
 
           MSG="$MSG\n\n🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
 
-          # Сохраняем результат в переменную
           echo "message=$MSG" >> $GITHUB_OUTPUT
 
       - name: 📤 Send Telegram Notification
