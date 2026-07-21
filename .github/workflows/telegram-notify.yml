@@ -26,7 +26,7 @@ jobs:
           MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
           REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
 
-          # Формируем сообщение с реальными переносами строк
+          # Формируем сообщение
           MSG="Привет! Новый коммит был отправлен в репу."
 
           MSG="$MSG
@@ -59,8 +59,12 @@ jobs:
 
           🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
 
-          # Сохраняем результат
-          echo "message=$MSG" >> $GITHUB_OUTPUT
+          # Сохраняем результат с поддержкой многострочного текста
+          {
+            echo "message<<EOF"
+            echo "$MSG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
 
       - name: 📤 Send Telegram Notification
         uses: cbrgm/telegram-github-action@v1
