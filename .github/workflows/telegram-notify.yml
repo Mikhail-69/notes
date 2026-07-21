@@ -26,24 +26,40 @@ jobs:
           MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
           REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
 
-          # Формируем сообщение
+          # Формируем сообщение с реальными переносами строк
           MSG="Привет! Новый коммит был отправлен в репу."
-          MSG="$MSG\n\n📝 **Коммит:**\n$CLEAN_MESSAGE"
+
+          MSG="$MSG
+
+          📝 **Коммит:**
+          $CLEAN_MESSAGE"
 
           if [ -n "$ADDED" ]; then
-            MSG="$MSG\n\n📂 **Добавлено:**\n$(echo "$ADDED" | sed 's/^/• /')"
+            MSG="$MSG
+
+          📂 **Добавлено:**
+          $(echo "$ADDED" | sed 's/^/• /')"
           fi
 
           if [ -n "$MODIFIED" ]; then
-            MSG="$MSG\n\n📂 **Изменено:**\n$(echo "$MODIFIED" | sed 's/^/• /')"
+            MSG="$MSG
+
+          📂 **Изменено:**
+          $(echo "$MODIFIED" | sed 's/^/• /')"
           fi
 
           if [ -n "$REMOVED" ]; then
-            MSG="$MSG\n\n📂 **Удалено:**\n$(echo "$REMOVED" | sed 's/^/• /')"
+            MSG="$MSG
+
+          📂 **Удалено:**
+          $(echo "$REMOVED" | sed 's/^/• /')"
           fi
 
-          MSG="$MSG\n\n🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+          MSG="$MSG
 
+          🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+
+          # Сохраняем результат
           echo "message=$MSG" >> $GITHUB_OUTPUT
 
       - name: 📤 Send Telegram Notification
