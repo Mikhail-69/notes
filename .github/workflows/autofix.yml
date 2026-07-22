@@ -43,5 +43,5 @@ jobs:
       - name: Commit fixes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "style: авто-форматирование Markdown"
+          commit_message: "style: auto-format Markdown"
           branch: ${{ github.head_ref }}
