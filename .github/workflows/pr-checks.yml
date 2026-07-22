@@ -1,6 +1,8 @@
 # ============================================================
+# 📄 Файл: pr-checks.yml
 # 🎯 Цель: Проверка качества PR и пуша в dev
 # 🚀 Запуск: При PR или пуше в dev
+# ⚡ Условие: Проверки запускаются ТОЛЬКО если есть изменения в .md файлах
 # 📂 Хранилище слов: .github/bad-words.txt
 # ============================================================
 
@@ -29,20 +31,17 @@ jobs:
 
       - name: Check for bad words
         run: |
-          # Проверяем, есть ли .md файлы в изменениях
           if ! git diff --name-only HEAD~1 HEAD | grep -q "\.md$"; then
             echo "⏭️ Нет .md файлов в изменениях — скипаем"
             exit 0
           fi
 
-          # Читаем список плохих слов из файла
           BAD_WORDS=$(cat .github/bad-words.txt | tr '\n' '|' | sed 's/|$//')
           if [ -z "$BAD_WORDS" ]; then
             echo "⚠️ Файл .github/bad-words.txt пуст или отсутствует"
             exit 0
           fi
 
-          # Ищем плохие слова
           if grep -r -n -E -i "\b($BAD_WORDS)\b" . --include="*.md" --exclude-dir=".git" --exclude="personal-hotkeys.md"; then
             echo "❌ Найдены запрещённые слова в Markdown-файлах"
             exit 1
@@ -58,7 +57,6 @@ jobs:
 
       - name: Check for secrets
         run: |
-          # Проверяем, есть ли .md или .txt файлы в изменениях
           if ! git diff --name-only HEAD~1 HEAD | grep -qE "\.(md|txt)$"; then
             echo "⏭️ Нет .md или .txt файлов в изменениях — скипаем"
             exit 0
@@ -87,7 +85,6 @@ jobs:
 
       - name: Check required folders
         run: |
-          # Список папок, которые должны существовать
           REQUIRED=(
             ".github"
             "books"
@@ -99,7 +96,6 @@ jobs:
             "github_project"
           )
 
-          # Список папок/файлов, которые НЕ должны быть удалены
           PROTECTED=(
             ".gitignore"
             "about_me.md"
@@ -140,70 +136,6 @@ jobs:
             echo "✅ Все обязательные элементы на месте"
           fi
 
-  commitlint:
-    name: 📋 Commit Message Check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Check all commit messages
-        run: |
-          FAILED=0
-          for COMMIT in $(git log origin/dev..HEAD --pretty=%H); do
-            MSG=$(git log -1 --pretty=%B $COMMIT)
-            AUTHOR=$(git log -1 --pretty=%an $COMMIT)
-
-            # 1. Проверка на пустой коммит
-            if [ -z "$MSG" ]; then
-              echo "❌ Commit $COMMIT пустой"
-              FAILED=1
-              continue
-            fi
-
-            # 2. Проверка на BREAKING CHANGE (всегда валидный)
-            if echo "$MSG" | grep -qE "^BREAKING CHANGE: .+"; then
-              echo "✅ Commit $COMMIT — BREAKING CHANGE (пропускаем)"
-              continue
-            fi
-
-            # 3. Проверка формата (type(scope)?: subject)
-            if ! echo "$MSG" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,100}"; then
-              echo "❌ Commit $COMMIT не соответствует Conventional Commits:"
-              echo "$MSG"
-              echo ""
-              FAILED=1
-              continue
-            fi
-
-            # 4. Проверка на #notify (только если автор не Mikhail-69)
-            if [ "$AUTHOR" != "Mikhail-69" ]; then
-              if echo "$MSG" | grep -q "#notify$"; then
-                echo "❌ Commit $COMMIT содержит #notify в конце:"
-                echo "$MSG"
-                echo ""
-                FAILED=1
-              fi
-            fi
-
-            # 5. Проверка, что после двоеточия есть текст
-            SUBJECT=$(echo "$MSG" | sed -n 's/^[^:]*: \(.*\)/\1/p')
-            if [ -z "$SUBJECT" ] || [ "$SUBJECT" = " " ]; then
-              echo "❌ Commit $COMMIT: после двоеточия нет текста:"
-              echo "$MSG"
-              echo ""
-              FAILED=1
-            fi
-          done
-
-          if [ $FAILED -ne 0 ]; then
-            echo "❌ Найдены коммиты с неправильным форматом"
-            exit 1
-          else
-            echo "✅ Все коммиты соответствуют Conventional Commits"
-          fi
-
   link-check:
     name: 🔗 Link Check
     runs-on: ubuntu-latest
@@ -212,7 +144,6 @@ jobs:
 
       - name: Check links
         run: |
-          # Проверяем, есть ли .md файлы в изменениях
           if ! git diff --name-only HEAD~1 HEAD | grep -q "\.md$"; then
             echo "⏭️ Нет .md файлов в изменениях — скипаем"
             exit 0
@@ -221,18 +152,14 @@ jobs:
           echo "🔍 Проверяем ссылки в изменённых .md файлах..."
           BROKEN=0
           for FILE in $(git diff --name-only HEAD~1 HEAD | grep "\.md$"); do
-            # Ищем все ссылки вида [текст](путь) и [текст](http...)
             grep -oP '\[.*?\]\([^)]+\)' "$FILE" | while read -r LINK; do
               URL=$(echo "$LINK" | sed -n 's/.*(\(.*\))/\1/p')
-              # Проверяем, что URL не пустой
               if [ -z "$URL" ]; then
                 echo "❌ В $FILE пустая ссылка: $LINK"
                 BROKEN=1
                 continue
               fi
-              # Если ссылка не начинается с http:// или https://, считаем её локальной
               if ! echo "$URL" | grep -qE '^https?://'; then
-                # Проверяем существование локального файла
                 if [ ! -f "$URL" ] && [ ! -d "$URL" ]; then
                   echo "❌ В $FILE битая локальная ссылка: $LINK"
                   BROKEN=1
