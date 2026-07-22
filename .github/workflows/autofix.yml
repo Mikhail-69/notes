@@ -1,6 +1,9 @@
 # ============================================================
+# 📄 Файл: autofix.yml
 # 🎯 Цель: Автоматическое форматирование Markdown-файлов
 # 🚀 Запуск: При каждом пуше или PR в ветку dev
+# ⚡ Условие: Проверка выполняется ТОЛЬКО если есть изменения в .md файлах
+# ⛔ Не запускается на коммиты от самого себя (github-actions[bot])
 # ============================================================
 
 name: Auto Format
@@ -19,9 +22,13 @@ jobs:
   format:
     name: 🔧 Auto-format Markdown
     runs-on: ubuntu-latest
+    # ⛔ Не запускаем на коммиты от бота
+    if: github.actor != 'github-actions[bot]'
+
     permissions:
       contents: write
       pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
         with:
