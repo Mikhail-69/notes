@@ -1,2 +1,6 @@
 # Файлы в .github/workflows/ может менять только владелец
 .github/workflows/ @Mikhail-69
+
+# Все файлы в корне (README.md, .gitignore и т.д.) — только я
+*.md @Mikhail-69
+шаблоны/ @Mikhail-69

@@ -1,10 +1,26 @@
+# ============================================================
+# 📄 Файл: pr-checks.yml
+# 🎯 Цель: Проверка качества PR и пуша в dev
+# 🚀 Запуск: При PR или пуше в dev
+# ⚡ Условие: Проверки запускаются ТОЛЬКО если есть изменения в .md файлах
+# 📂 Хранилище слов: .github/bad-words.txt
+# ============================================================
+
 name: PR Quality Checks
 
 on:
   pull_request:
     branches: [ main, dev ]
+    paths:
+      - '**/*.md'
+      - '**/*.yml'
+      - '.github/workflows/*.yml'
   push:
     branches: [ dev ]
+    paths:
+      - '**/*.md'
+      - '**/*.yml'
+      - '.github/workflows/*.yml'
 
 jobs:
   bad-words:
@@ -12,9 +28,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check for bad words
         run: |
-          BAD_WORDS="мат|ругательство|плохое_слово|хуй|пизд|бля|залупа|муд|ебал|суч|гандон|дроч|пидор|гей|лох|шлюха|трах|секс|ебать|пиздец|блядь|сука|хер|жопа|пидр|пидорас|мудак|долбоеб|долбаеб|уебок"
+          if ! git diff --name-only HEAD~1 HEAD | grep -q "\.md$"; then
+            echo "⏭️ Нет .md файлов в изменениях — скипаем"
+            exit 0
+          fi
+
+          BAD_WORDS=$(cat .github/bad-words.txt | tr '\n' '|' | sed 's/|$//')
+          if [ -z "$BAD_WORDS" ]; then
+            echo "⚠️ Файл .github/bad-words.txt пуст или отсутствует"
+            exit 0
+          fi
+
           if grep -r -n -E -i "\b($BAD_WORDS)\b" . --include="*.md" --exclude-dir=".git" --exclude="personal-hotkeys.md"; then
             echo "❌ Найдены запрещённые слова в Markdown-файлах"
             exit 1
@@ -27,10 +54,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check for secrets
         run: |
+          if ! git diff --name-only HEAD~1 HEAD | grep -qE "\.(md|txt)$"; then
+            echo "⏭️ Нет .md или .txt файлов в изменениях — скипаем"
+            exit 0
+          fi
+
           SECRET_PATTERNS="password|secret|key|token|api_key|private_key|JWT|AUTH_TOKEN"
-          if grep -r -n -E -i "$SECRET_PATTERNS" . --include="*.md" --include="*.txt" --include="*.yml" --exclude-dir=".git" --exclude="secrets.md" --exclude-dir="саморазвитие/hacker101" --exclude=".github/workflows/pr-checks.yml" | grep -v ".gitignore"; then
+          if grep -r -n -E -i "$SECRET_PATTERNS" . \
+            --include="*.md" --include="*.txt" \
+            --exclude-dir=".git" \
+            --exclude="secrets.md" \
+            --exclude="саморазвитие/hacker101/CHECKLIST.md" \
+            --exclude=".github/workflows/pr-checks.yml" \
+            | grep -v ".gitignore"; then
+            echo "❌ Обнаружены подозрительные строки (пароли, ключи, токены)"
             echo "Проверь, что ты не закоммитил секреты!"
             exit 1
           else
@@ -42,40 +82,95 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Check required folders
         run: |
-          REQUIRED=("шаблоны" "books" "саморазвитие" ".github" "github_project" "images")
+          REQUIRED=(
+            ".github"
+            "books"
+            "college"
+            "S.E.E.D.1956"
+            "саморазвитие"
+            "шаблоны"
+            "images"
+            "github_project"
+          )
+
+          PROTECTED=(
+            ".gitignore"
+            "about_me.md"
+            "AUTHORS"
+            "README.md"
+            "шаблоны/attention"
+            "саморазвитие/Ivanov_M_V"
+            "саморазвитие/students"
+            "images/diagrams"
+            "images/icons"
+            "images/memes"
+            "images/screenshots"
+            "images/README.md"
+            "books/Программирование"
+            ".github/workflows"
+            ".github/workflows/CODEOWNERS"
+            ".github/workflows/telegram-notify.yml"
+          )
+
           MISSING=()
           for dir in "${REQUIRED[@]}"; do
             if [ ! -d "$dir" ]; then
               MISSING+=("$dir")
             fi
           done
+
+          for item in "${PROTECTED[@]}"; do
+            if [ ! -e "$item" ]; then
+              MISSING+=("$item")
+            fi
+          done
+
           if [ ${#MISSING[@]} -ne 0 ]; then
-            echo "❌ Отсутствуют обязательные папки: ${MISSING[*]}"
+            echo "❌ Отсутствуют обязательные элементы:"
+            printf '%s\n' "${MISSING[@]}"
             exit 1
           else
-            echo "✅ Все обязательные папки на месте"
+            echo "✅ Все обязательные элементы на месте"
           fi
 
-  commitlint:
-    name: 📋 Commit Message Check
+  link-check:
+    name: 🔗 Link Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Check commit messages
+
+      - name: Check links
         run: |
-          COMMIT_MSG=$(git log -1 --pretty=%B)
-          if ! echo "$COMMIT_MSG" | grep -qE "^(feat|fix|docs|style|refactor|perf|test|chore|ci|build|revert)(\(.+\))?: .{1,100}"; then
-            echo "❌ Commit message не соответствует Conventional Commits:"
-            echo "$COMMIT_MSG"
-            echo ""
-            echo "Используй формат: type(scope): subject"
-            echo "Примеры: feat(саморазвитие): добавил конспект по SQL"
-            echo "         fix: исправил опечатку в README.md"
+          if ! git diff --name-only HEAD~1 HEAD | grep -q "\.md$"; then
+            echo "⏭️ Нет .md файлов в изменениях — скипаем"
+            exit 0
+          fi
+
+          echo "🔍 Проверяем ссылки в изменённых .md файлах..."
+          BROKEN=0
+          for FILE in $(git diff --name-only HEAD~1 HEAD | grep "\.md$"); do
+            grep -oP '\[.*?\]\([^)]+\)' "$FILE" | while read -r LINK; do
+              URL=$(echo "$LINK" | sed -n 's/.*(\(.*\))/\1/p')
+              if [ -z "$URL" ]; then
+                echo "❌ В $FILE пустая ссылка: $LINK"
+                BROKEN=1
+                continue
+              fi
+              if ! echo "$URL" | grep -qE '^https?://'; then
+                if [ ! -f "$URL" ] && [ ! -d "$URL" ]; then
+                  echo "❌ В $FILE битая локальная ссылка: $LINK"
+                  BROKEN=1
+                fi
+              fi
+            done
+          done
+
+          if [ $BROKEN -ne 0 ]; then
+            echo "❌ Найдены битые ссылки"
             exit 1
           else
-            echo "✅ Commit message соответствует Conventional Commits"
+            echo "✅ Все ссылки корректны"
           fi

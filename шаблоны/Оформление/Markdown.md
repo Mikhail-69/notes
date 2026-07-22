@@ -58,7 +58,7 @@
 Подстрочник: H~2~O       → H~2~O
 Надстрочник: X^2^        → X^2^
 
-![Описание картинки](../images/screenshots/markdown.png)
+![Описание картинки](../../images/screenshots/markdown.png)
 
 ## Скрытый текст (спойлер!)
 
@@ -95,8 +95,8 @@
 
 [Текст ссылки](https://example.com)  
 [Относительная ссылка](../README.md)  
-[Ссылка с тайтлом](https://example.com "Подсказка при наведении")
-![Альтернативный текст](images/photo.png)  
+[Ссылка с тайтлом](https://example.com "Подсказка при наведении")  
+![Альтернативный текст](images/photo.png)
 ![Картинка с тайтлом](images/photo.png "Подпись")  
 [![Alt](images/icon.png)](https://example.com)
 
@@ -202,8 +202,7 @@ ___
 Работает на GitHub, GitLab, в Obsidian и некоторых других платформах.
 
 ### sequenceDiagram
-
-![Описание картинки](../images/diagrams/sequenceDiagram.png)
+![Описание картинки](../../images/diagrams/sequenceDiagram.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 sequenceDiagram
@@ -225,9 +224,8 @@ sequenceDiagram
     K8s->>K8s: ✅ Pod запущен!
 </details>
 
-### flowchart
-
-![Описание картинки](../images/diagrams/flowchart.png)
+### flowchar
+![Описание картинки](../../images/diagrams/flowchart.png)
 
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
@@ -241,7 +239,7 @@ flowchart TD
 
 ### gitGraph
 
-![Описание картинки](../images/diagrams/gitGraph.png)
+![Описание картинки](../../images/diagrams/gitGraph.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 gitGraph
@@ -255,8 +253,7 @@ gitGraph
 </details>
 
 ### pie
-
-![Описание картинки](../images/diagrams/pie.png)
+![Описание картинки](../../images/diagrams/pie.png)
 <details>
 <summary>Нажми, чтобы раскрыть</summary>
 pie

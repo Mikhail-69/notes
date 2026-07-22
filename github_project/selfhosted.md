@@ -69,3 +69,15 @@
 |--------|----------|
 | **[Plausible](https://github.com/plausible/analytics)** | Замена Google Analytics без слежки за пользователями. Лёгкий и приватный. |
 | **[PostHog](https://github.com/PostHog/posthog)** | Аналитика пользователей, запись сессий, A/B-тесты. Альтернатива Mixpanel на своём сервере. |
+
+
+## 🔧 Self-hosted утилиты
+
+| Проект | Описание |
+|--------|----------|
+| **[Ghost Provider](https://github.com/GHOST-PROVIDER/GHOST-PROVIDER)** | Разворачивайте self-hosted сервисы без лишней настройки. Поддерживает SearXNG, Open WebUI, Memos и VERT. |
+| **[Traefik](https://github.com/traefik/traefik)** | Обратный прокси-сервер и балансировщик нагрузки для микросервисов. Автоматическая генерация маршрутов через API оркестратора. |
+| **[Pi-hole](https://github.com/pi-hole/pi-hole)** | DNS sinkhole для блокировки рекламы и трекеров на уровне всей сети. Не требует установки клиентов. |
+| **[Proxmox Mail Gateway](https://github.com/proxmox-mail-gateway/pmg)** | Защищённый прокси-шлюз для фильтрации спама и вирусов в почтовом трафике. |
+| **[Ceph](https://github.com/ceph/ceph)** | Распределённая система хранения данных с открытым исходным кодом. Поддерживает объектное, блочное и файловое хранение. |
+| **[RedisInsight](https://github.com/RedisInsight/RedisInsight)** | Графический интерфейс для Redis, позволяющий управлять базами данных и данными. |

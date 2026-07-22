@@ -1,0 +1,74 @@
+name: 📨 Telegram Notify
+
+on:
+  push:
+    branches: [ dev, main ]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.head_commit.message, '#notify') &&
+      github.actor == 'Mikhail-69'
+
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: 📝 Prepare message
+        id: prepare
+        run: |
+          # Убираем #notify из сообщения
+          CLEAN_MESSAGE=$(echo "${{ github.event.head_commit.message }}" | sed 's/ * #notify *$//')
+
+          # Получаем списки файлов с обработкой null
+          ADDED=$(echo '${{ toJSON(github.event.head_commit.added) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+          MODIFIED=$(echo '${{ toJSON(github.event.head_commit.modified) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+          REMOVED=$(echo '${{ toJSON(github.event.head_commit.removed) }}' | jq -r 'if . == null then empty else .[] | select(contains("images/") | not) end')
+
+          # Формируем сообщение
+          MSG="Привет! Новый коммит был отправлен в репу."
+
+          MSG="$MSG
+
+          📝 **Коммит:**
+          $CLEAN_MESSAGE"
+
+          if [ -n "$ADDED" ]; then
+            MSG="$MSG
+
+          📂 **Добавлено:**
+          $(echo "$ADDED" | sed 's/^/• /')"
+          fi
+
+          if [ -n "$MODIFIED" ]; then
+            MSG="$MSG
+
+          📂 **Изменено:**
+          $(echo "$MODIFIED" | sed 's/^/• /')"
+          fi
+
+          if [ -n "$REMOVED" ]; then
+            MSG="$MSG
+
+          📂 **Удалено:**
+          $(echo "$REMOVED" | sed 's/^/• /')"
+          fi
+
+          MSG="$MSG
+
+          🔗 [Посмотреть изменения](https://github.com/${{ github.repository }}/commit/${{ github.sha }})"
+
+          # Сохраняем результат с поддержкой многострочного текста
+          {
+            echo "message<<EOF"
+            echo "$MSG"
+            echo "EOF"
+          } >> $GITHUB_OUTPUT
+
+      - name: 📤 Send Telegram Notification
+        uses: cbrgm/telegram-github-action@v1
+        with:
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          to: ${{ secrets.TELEGRAM_CHAT_ID }}
+          message: ${{ steps.prepare.outputs.message }}
