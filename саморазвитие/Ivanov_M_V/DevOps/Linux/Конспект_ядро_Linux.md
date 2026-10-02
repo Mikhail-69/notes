@@ -113,6 +113,27 @@
 - Драйвер ядра говорит программе *«пиши туда»* и переводит команды в электрические сигналы.
 
 > Благодаря этому программы работают одинаково на любом железе.
+>
+> Материалы по внутреннему устройству ядра — процессорные переменные,
+> cpumask, initcall, цепочки уведомлений и cgroups — в конспекте
+> [вот тут](linux-cpu-cgroups.md).
+>
+> Инициализация ядра от start_kernel и структуры данных Linux —
+> в конспекте [вот тут](linux-init-data-structures.md).
+>
+> Прерывания и обработка исключений: IDT, стеки, обработчики
+> и отложенная обработка (softirq, tasklets, workqueues) —
+> в конспекте [вот тут](linux-interrupts.md).
+>
+> Управление памятью и сборка: memblock, fixmap, ioremap,
+> kmemcheck, процесс сборки ядра, линковка, патчи и запуск
+> программы в userspace — в конспекте
+> [вот тут](linux-mm-build-link.md).
+>
+> Таймеры и управление временем: jiffies, clocksource, tick broadcast,
+> NO_HZ, динамические таймеры, clockevents, paging, ELF и
+> inline assembly — в конспекте
+> [вот тут](linux-timers-and-theory.md).
 
 ---
 
@@ -154,6 +175,10 @@
 ```bash
 strace -p PID    # прослушать syscalls процесса
 ```
+
+> Разбор syscall изнутри: таблица вызовов, `entry_SYSCALL_64`,
+> vsyscall/vDSO, `execve`, `open` и лимиты rlimit — в конспекте
+> [вот тут](linux-syscall.md).
 
 ---
 
